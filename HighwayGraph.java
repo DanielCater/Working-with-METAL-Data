@@ -263,6 +263,7 @@ public class HighwayGraph {
         // Search for extreme edges and longest/shortest labels
         Edge longestEdge = null, shortestEdge = null, longestLabelEdge = null, shortestLabelEdge = null;
         int count = 0;
+        double totalLength = 0.0;
 
         for (int check = 0; check < g.vertices.length; check++) {
             Vertex v = g.vertices[check];
@@ -273,6 +274,7 @@ public class HighwayGraph {
                     e = e.next;
                     continue;
                 }
+                totalLength += e.length;
                 count++;
                 if (longestEdge == null || e.length > longestEdge.length) {
                     longestEdge = e;
@@ -298,5 +300,6 @@ public class HighwayGraph {
         System.out.println("Shortest label edge: " + shortestLabelEdge.label + " length: " + shortestLabelEdge.label.length());
         System.out.println("Total number of edges: " + g.numEdges);
         System.out.println("Number of edges considered: " + count);
+        System.out.println("Total length of edges: " + df.format(totalLength));
     }
 }
