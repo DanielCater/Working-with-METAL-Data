@@ -268,21 +268,20 @@ public class HighwayGraph {
             Vertex v = g.vertices[check];
             Edge e = v.head;
             while (e != null) {
-                if (e.dest > check) {
-                    count++;
-                    if (longestEdge == null || e.length > longestEdge.length) {
-                        longestEdge = e;
-                    }
-                    if (shortestEdge == null || e.length < shortestEdge.length) {
-                        shortestEdge = e;
-                    }
-                    if (longestLabelEdge == null || e.label.length() > longestLabelEdge.label.length()) {
-                        longestLabelEdge = e;
-                    }
-                    if (shortestLabelEdge == null || e.label.length() < shortestLabelEdge.label.length()) {
-                        shortestLabelEdge = e;
-                    }
+                count++;
+                if (longestEdge == null || e.length > longestEdge.length) {
+                    longestEdge = e;
                 }
+                if (shortestEdge == null || e.length < shortestEdge.length) {
+                    shortestEdge = e;
+                }
+                if (longestLabelEdge == null || e.label.length() > longestLabelEdge.label.length()) {
+                    longestLabelEdge = e;
+                }
+                if (shortestLabelEdge == null || e.label.length() < shortestLabelEdge.label.length()) {
+                    shortestLabelEdge = e;
+                }
+
                 e = e.next;
             }
         }
@@ -292,6 +291,7 @@ public class HighwayGraph {
         System.out.println("Shortest edge: " + shortestEdge.label + " length: " + df.format(shortestEdge.length));
         System.out.println("Longest label edge: " + longestLabelEdge.label + " length: " + longestLabelEdge.label.length());
         System.out.println("Shortest label edge: " + shortestLabelEdge.label + " length: " + shortestLabelEdge.label.length());
-        System.out.println("Total number of edges: " + count);
+        System.out.println("Total number of edges: " + g.numEdges);
+        System.out.println("Number of edges considered: " + count);
     }
 }
