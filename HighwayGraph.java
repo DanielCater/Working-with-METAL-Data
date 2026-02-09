@@ -268,6 +268,11 @@ public class HighwayGraph {
             Vertex v = g.vertices[check];
             Edge e = v.head;
             while (e != null) {
+                // Skip edges we've already checked
+                if (e.dest < check) {
+                    e = e.next;
+                    continue;
+                }
                 count++;
                 if (longestEdge == null || e.length > longestEdge.length) {
                     longestEdge = e;
