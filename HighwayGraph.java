@@ -225,10 +225,11 @@ public class HighwayGraph {
         System.out.println(g);
 
         // ADD CODE HERE TO COMPLETE LAB TASKS
+        // Search for extreme vertices and longest/shortest labels
         Vertex north = g.vertices[0], south = g.vertices[0], east = g.vertices[0], west = g.vertices[0];
         Vertex longest = g.vertices[0], shortest = g.vertices[0];
 
-        for (int check = 1; check < g.vertices.length - 1; check++) {
+        for (int check = 0; check < g.vertices.length; check++) {
             Vertex v = g.vertices[check];
             if (v.point.lat > north.point.lat) {
                 north = v;
@@ -251,11 +252,46 @@ public class HighwayGraph {
 
         }
 
+        System.out.println("Vertex extremes:");
         System.out.println("North extreme: " + north.label);
         System.out.println("South extreme: " + south.label);
         System.out.println("East extreme: " + east.label);
         System.out.println("West extreme: " + west.label);
         System.out.println("Longest label: " + longest.label + " length: " + longest.label.length());
-        System.out.println("Shortest label: " + shortest.label + " length: " + shortest.label.length());
+        System.out.println("Shortest label: " + shortest.label + " length: " + shortest.label.length() + "\n");
+
+        // Search for extreme edges and longest/shortest labels
+        Edge longestEdge = null, shortestEdge = null, longestLabelEdge = null, shortestLabelEdge = null;
+        int count = 0;
+
+        for (int check = 0; check < g.vertices.length; check++) {
+            Vertex v = g.vertices[check];
+            Edge e = v.head;
+            while (e != null) {
+                if (e.dest > check) {
+                    count++;
+                    if (longestEdge == null || e.length > longestEdge.length) {
+                        longestEdge = e;
+                    }
+                    if (shortestEdge == null || e.length < shortestEdge.length) {
+                        shortestEdge = e;
+                    }
+                    if (longestLabelEdge == null || e.label.length() > longestLabelEdge.label.length()) {
+                        longestLabelEdge = e;
+                    }
+                    if (shortestLabelEdge == null || e.label.length() < shortestLabelEdge.label.length()) {
+                        shortestLabelEdge = e;
+                    }
+                }
+                e = e.next;
+            }
+        }
+
+        System.out.println("Edge extremes:");
+        System.out.println("Longest edge: " + longestEdge.label + " length: " + df.format(longestEdge.length));
+        System.out.println("Shortest edge: " + shortestEdge.label + " length: " + df.format(shortestEdge.length));
+        System.out.println("Longest label edge: " + longestLabelEdge.label + " length: " + longestLabelEdge.label.length());
+        System.out.println("Shortest label edge: " + shortestLabelEdge.label + " length: " + shortestLabelEdge.label.length());
+        System.out.println("Total number of edges: " + count);
     }
 }
