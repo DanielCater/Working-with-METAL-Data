@@ -2,23 +2,19 @@
 /**
  * An undirected, adjacency-list based graph data structure developed
  * specifically for METAL highway mapping graphs.
- * 
+ *
  * Starter implementation for the METAL Learning Module
  * Working with METAL Data
- * 
- * @author Jim Teresco ADD LAB PARTNER NAMES HERE
+ *
+ * @author Jim Teresco, Daniel Cater, and Hawk Lindner
  * @version January 2024
  */
-
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
-public class HighwayGraph
-{
+public class HighwayGraph {
 
     private static final DecimalFormat df = new DecimalFormat("#.###");
 
@@ -27,24 +23,30 @@ public class HighwayGraph
     // of being able to compute its distance to another
     // LatLng object.
     private class LatLng {
+
         private double lat, lng;
+
         public LatLng(double lat, double lng) {
             this.lat = lat;
             this.lng = lng;
         }
 
         /**
-        compute the distance in miles from this LatLng to another
-
-        @param other another LatLng
-        @return the distance in miles from this LatLng to other
+         * compute the distance in miles from this LatLng to another
+         *
+         *          *@param other another LatLng
+         * @return the distance in miles from this LatLng to other
          */
         public double distanceTo(LatLng other) {
-            /** radius of the Earth in statute miles */
+            /**
+             * radius of the Earth in statute miles
+             */
             final double EARTH_RADIUS = 3963.1;
 
             // did we get the same point?
-            if (equals(other)) return 0.0;
+            if (equals(other)) {
+                return 0.0;
+            }
 
             // coordinates in radians
             double rlat1 = Math.toRadians(lat);
@@ -52,25 +54,25 @@ public class HighwayGraph
             double rlat2 = Math.toRadians(other.lat);
             double rlng2 = Math.toRadians(other.lng);
 
-            return Math.acos(Math.cos(rlat1)*Math.cos(rlng1)*Math.cos(rlat2)*Math.cos(rlng2) +
-                Math.cos(rlat1)*Math.sin(rlng1)*Math.cos(rlat2)*Math.sin(rlng2) +
-                Math.sin(rlat1)*Math.sin(rlat2)) * EARTH_RADIUS;
+            return Math.acos(Math.cos(rlat1) * Math.cos(rlng1) * Math.cos(rlat2) * Math.cos(rlng2)
+                    + Math.cos(rlat1) * Math.sin(rlng1) * Math.cos(rlat2) * Math.sin(rlng2)
+                    + Math.sin(rlat1) * Math.sin(rlat2)) * EARTH_RADIUS;
         }
 
         /**
-        Compare another LatLng with this for equality, subject to the
-        specified tolerance.
-
-        @param o the other LatLng
-        @pre o instanceof LatLng
-        @return whether the two lat/lng pairs should be considered equal
+         * Compare another LatLng with this for equality, subject to the
+         * specified tolerance.
+         *
+         *          *@param o the other LatLng
+         * @pre o instanceof LatLng
+         * @return whether the two lat/lng pairs should be considered equal
          */
         public boolean equals(Object o) {
             final double TOLERANCE = 0.00001;
-            LatLng other = (LatLng)o;
+            LatLng other = (LatLng) o;
 
-            return ((Math.abs(other.lat-lat) < TOLERANCE) &&
-                (Math.abs(other.lng-lng) < TOLERANCE));
+            return ((Math.abs(other.lat - lat) < TOLERANCE)
+                    && (Math.abs(other.lng - lng) < TOLERANCE));
         }
 
         public String toString() {
@@ -80,13 +82,14 @@ public class HighwayGraph
 
     // our private internal structure for a Vertex
     private class Vertex {
+
         private String label;
         private LatLng point;
         private Edge head;
 
         public Vertex(String l, double lat, double lng) {
             label = l;
-            point = new LatLng(lat,lng);
+            point = new LatLng(lat, lng);
         }
 
     }
@@ -164,13 +167,13 @@ public class HighwayGraph
             LatLng v2Tov1[] = null;
             if (shapePointStrings.length > 1) {
                 // build arrays in both orders
-                v1Tov2 = new LatLng[shapePointStrings.length/2];
-                v2Tov1 = new LatLng[shapePointStrings.length/2];
-                for (int pointNum = 0; pointNum < shapePointStrings.length/2; pointNum++) {
-                    LatLng point = new LatLng(Double.parseDouble(shapePointStrings[pointNum*2]),
-                            Double.parseDouble(shapePointStrings[pointNum*2+1]));
+                v1Tov2 = new LatLng[shapePointStrings.length / 2];
+                v2Tov1 = new LatLng[shapePointStrings.length / 2];
+                for (int pointNum = 0; pointNum < shapePointStrings.length / 2; pointNum++) {
+                    LatLng point = new LatLng(Double.parseDouble(shapePointStrings[pointNum * 2]),
+                            Double.parseDouble(shapePointStrings[pointNum * 2 + 1]));
                     v1Tov2[pointNum] = point;
-                    v2Tov1[shapePointStrings.length/2 - pointNum - 1] = point;
+                    v2Tov1[shapePointStrings.length / 2 - pointNum - 1] = point;
                 }
             }
 
@@ -221,6 +224,38 @@ public class HighwayGraph
         // print summary of the graph
         System.out.println(g);
 
-	// ADD CODE HERE TO COMPLETE LAB TASKS
+        // ADD CODE HERE TO COMPLETE LAB TASKS
+        Vertex north = g.vertices[0], south = g.vertices[0], east = g.vertices[0], west = g.vertices[0];
+        Vertex longest = g.vertices[0], shortest = g.vertices[0];
+
+        for (int check = 1; check < g.vertices.length - 1; check++) {
+            Vertex v = g.vertices[check];
+            if (v.point.lat > north.point.lat) {
+                north = v;
+            }
+            if (v.point.lat < south.point.lat) {
+                south = v;
+            }
+            if (v.point.lng > east.point.lng) {
+                east = v;
+            }
+            if (v.point.lng < west.point.lng) {
+                west = v;
+            }
+            if (v.label.length() > longest.label.length()) {
+                longest = v;
+            }
+            if (v.label.length() < shortest.label.length()) {
+                shortest = v;
+            }
+
+        }
+
+        System.out.println("North extreme: " + north.label);
+        System.out.println("South extreme: " + south.label);
+        System.out.println("East extreme: " + east.label);
+        System.out.println("West extreme: " + west.label);
+        System.out.println("Longest label: " + longest.label + " length: " + longest.label.length());
+        System.out.println("Shortest label: " + shortest.label + " length: " + shortest.label.length());
     }
 }
